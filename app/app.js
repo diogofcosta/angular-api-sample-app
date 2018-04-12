@@ -1,14 +1,12 @@
-'use strict';
-
-// Declare app level module which depends on views, and components
 angular.module('myApp', [
-  'ngRoute',
-  'myApp.view1',
-  'myApp.view2',
-  'myApp.version'
-]).
-config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
-  $locationProvider.hashPrefix('!');
-
-  $routeProvider.otherwise({redirectTo: '/view1'});
+  'myApp.services',
+  'myApp.controllers',
+  'ngRoute'
+])
+//let's configure the routes, if we're not at a given route here defaults back the the main list one
+.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.
+	when("/questions", {templateUrl: "partials/drivers.html", controller: "driversController"}).
+	when("/questions/:id", {templateUrl: "partials/driver.html", controller: "driverController"}).
+	otherwise({redirectTo: '/questions'});
 }]);
