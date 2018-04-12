@@ -2,25 +2,16 @@
 <html>
 <head>
   <title>My Sample App</title>
+  <link rel="stylesheet" type="text/css" href="app.css">
 </head>
 
 <body ng-app="myApp" ng-controller="questionsController">
-  <table>
-    <thead>
-      <tr><th colspan="4">List of Questions</th></tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="question in questionsList">
-        <td>{{$index + 1}}</td>
-        <!--td>
-          <img src="img/flags/{{driver.Driver.nationality}}.png" />
-          {{driver.Driver.givenName}}&nbsp;{{driver.Driver.familyName}}
-        </td-->
-        <td>{{question.name}}</td>
-        <td>TODO</td>
-      </tr>
-    </tbody>
-  </table>
+  <h3>List of Questions</h3>
+  <input type="text" ng-model="questionFilter" ng-change="searchFiltered()" placeholder="Search..."/>
+  <ul>
+      <li ng-repeat="question in questionsList">{{$index + 1}} - {{question.question}}</li>
+  </ul>
+
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="app.js"></script>

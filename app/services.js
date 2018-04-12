@@ -42,10 +42,15 @@ angular.module('myApp.services', [])
     }
 
     //endpoint to get the list of questions (no params yet)
-    blissAPI.getQuestions = () => {
+    blissAPI.getQuestions = (offset, filter) => {
       return $http({
         method: 'GET', 
-        url: '/questions'
+        url: '/questions',
+        params: {
+            limit: 10, //the functional requirement is that we ask for 10 records at a time, which we could parametrize into a config file
+            offset: offset,
+            filter: filter //assuming filter is working on the API then we get results filtered by this
+        } 
       })
     }
 
