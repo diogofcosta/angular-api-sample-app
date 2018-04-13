@@ -1,6 +1,6 @@
 <input type="text" ng-model="questionFilter" ng-change="searchFiltered()" placeholder="Search..."/>
 <div infinite-scroll='moreQuestions()' infinite-scroll-disabled='loadingMore' infinite-scroll-distance='1'>
-    <div ng-repeat='question in questionsList'>
+    <div ng-repeat='question in questionsList' ng-click="goToQuestion(question.id)">
         <span class="order">{{$index + 1}}</span>
         <span><img class="thumbnail" src="{{question.thumb_url}}"/></span>
         <span class="question">{{question.question}}</span>

@@ -8,10 +8,27 @@ angular.module('myApp', [
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider
   .when("/", {templateUrl: "templates/loading-screen.html", controller: "loadingScreenController"})
-  .when("/questions", {templateUrl: "templates/list-questions.html" ,controller: "questionsController"})
-  .when("/questions/:id", {templateUrl: "templates/question-detail.html" ,controller: "detailedQuestionController"})
-  .otherwise({redirectTo: '/'});
-}]);
+  .when("/questions:question_id?", {templateUrl: "templates/list-questions.html" ,controller: "questionsController"})
+  .when("/questions/:question_id", {templateUrl: "templates/detailed-question.html" ,controller: "detailedQuestionController"})
+  .otherwise({redirectTo: '/'})
+}])
+
+.run(($window ,$rootScope) => {
+  //based on https://stackoverflow.com/a/16242703
+  //we use this to capture the offline/online event and handle it on angular
+  $rootScope.online = navigator.onLine;
+      $window.addEventListener("offline", function() {
+        $rootScope.$apply(function() {
+          $rootScope.online = false;
+        });
+      }, false);
+
+      $window.addEventListener("online", function() {
+        $rootScope.$apply(function() {
+          $rootScope.online = true;
+        });
+      }, false);
+})
 
 // you might call this after your module initalization
 /**
