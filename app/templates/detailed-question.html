@@ -1,0 +1,16 @@
+<div class="question-container" ng-controller="detailedQuestionController">
+    <div class="id">ID: {{currentQuestion.id}}</div>
+    <div>Image: <img src="{{currentQuestion.image_url}}"/></div>
+    <div>Thumbnail: <img src="{{currentQuestion.thumb_url}}"/></div>
+    <div class="question">Question: {{currentQuestion.question}}</div>
+    <div class="date">Published at: {{currentQuestion.published_at}}</div>
+    <div class="answers">
+        Choices:
+        <div ng-repeat='choice in currentQuestion.choices'>
+            <span class="value">{{choice.choice}}</span>
+            <span class="votes">{{choice.votes}}</span>
+            <button class="btn btn-primary btn-xs" ng-click="submitVote($index)">Vote</button>
+        </div>
+    </div>
+</div>
+<button class="btn btn-primary btn-xs" ng-click="goToQuestionList()">Back to questions list</button>
