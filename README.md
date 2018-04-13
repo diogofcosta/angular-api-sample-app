@@ -10,7 +10,7 @@ Since it's based on the angular-seed project most of the scripts to run are the 
 
 The more important ones are as follows:
 
-    Installing dependencies:
+### Install Dependencies
 
     ```
     npm install
@@ -26,7 +26,7 @@ The more important ones are as follows:
     `angular-seed` changes this location through the `.bowerrc` file. Putting it in the `app` folder
     makes it easier to serve the files by a web server.*
 
-    Running the app:
+### Running the app:
 
     The project is preconfigured with a simple development web server. The simplest way to start this server is:
 
