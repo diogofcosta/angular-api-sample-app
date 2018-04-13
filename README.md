@@ -69,3 +69,6 @@ predefined script to do this:
 npm run test-single-run
 ```
 
+### Additional notes
+
+This is a WIP (work-in-progress) and it was done in a few hours as a code challenge, needs a lot more work which I intend to do, specifically on the layout/appearance of the app as well as further testing.
