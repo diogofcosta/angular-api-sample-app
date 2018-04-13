@@ -12,36 +12,36 @@ The more important ones are as follows:
 
 ### Install Dependencies
 
-    ```
-    npm install
-    ```
+```
+npm install
+```
 
-    Behind the scenes this will also call `bower install`. After that, you should find out that you have
-    two new folders in your project.
+Behind the scenes this will also call `bower install`. After that, you should find out that you have
+two new folders in your project.
 
-    * `node_modules` - contains the npm packages for the tools we need
-    * `app/bower_components` - contains the Angular framework files
+* `node_modules` - contains the npm packages for the tools we need
+* `app/bower_components` - contains the Angular framework files
 
-    *Note that the `bower_components` folder would normally be installed in the root folder but
-    `angular-seed` changes this location through the `.bowerrc` file. Putting it in the `app` folder
-    makes it easier to serve the files by a web server.*
+*Note that the `bower_components` folder would normally be installed in the root folder but
+`angular-seed` changes this location through the `.bowerrc` file. Putting it in the `app` folder
+makes it easier to serve the files by a web server.*
 
 ### Running the app:
 
-    The project is preconfigured with a simple development web server. The simplest way to start this server is:
+The project is preconfigured with a simple development web server. The simplest way to start this server is:
 
-    ```
-    npm start
-    ```
+```
+npm start
+```
 
-    Now browse to the app at localhost:8000/index.html.
+Now browse to the app at localhost:8000/index.html.
 
 
 ### Testing:
 
-    At the moment only a few Unit tests are implemented, the plan is with time and after learning a bit more about them to implement many more.
+At the moment only a few Unit tests are implemented, the plan is with time and after learning a bit more about them to implement many more.
 
-    ### Running Unit Tests
+### Running Unit Tests
 
 The `angular-seed` app comes preconfigured with unit tests. These are written in [Jasmine][jasmine],
 which we run with the [Karma][karma] test runner. We provide a Karma configuration file to run them.
