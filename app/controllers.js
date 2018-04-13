@@ -1,24 +1,59 @@
-angular.module('myApp.controllers', []).
-controller('questionsController', function($scope, blissAPIservice) {
+angular.module('myApp.controllers', [])
+.controller('loadingScreenController', function(blissAPIservice, $location) {
     //test call to the service see if it's working
-    // blissAPIservice.checkHealth()
-    // .then(response => {
-    //     console.log("Hooray a response!" + response)
-    // })
-    // .catch(error => {
-    //     console.log("Oh noes! An error!" + error)
-    // })
-
-    //let's first get all the questions without any params, and list them
-    blissAPIservice.getQuestions()
+    blissAPIservice.checkHealth()
     .then(response => {
-        console.log(response.data)
-        $scope.questionsList = response.data;
+        console.log("Hooray a response!")
+        console.log(response)
+        if(response.data.status === "OK") {
+            console.log("going to redirect to questions in 2 seconds")
+            $location.path("/questions")
+        }
     })
     .catch(error => {
-        console.error(error)
-        //TODO: handle error
+        console.log("Oh noes! An error!" + error)
     })
+})
+.controller('questionsController', function($scope, blissAPIservice, $location) {
+    console.log("loaded questions controller, params? ")
+    //let's get the url params if there's any (only interested in the question_filter param)
+    let searchObject = $location.search()
+    console.log(searchObject)
+
+
+    //this variable will "track" the number of questions that we got from the endpoint 
+    //it starts at 0 and then each time we load questions we increment it by 10 so that
+    //next time we request with the offset that's coming next
+    $scope.questionsOffset = 0
+    $scope.questionFilter = searchObject.question_filter || ''
+    $scope.questionsList = []
+
+    $scope.moreQuestions = () => {
+        console.log("called moreQuestions")
+        //save the context
+        let self = this
+        
+        if (self.loadingMore) return
+        self.loadingMore = true
+        
+        //called when are "infinite scrolling" to make sure we keep loading more and more events and add it to the list
+        blissAPIservice.getQuestions($scope.questionsOffset, $scope.questionFilter)
+        .then(response => {
+            console.log(response.data)
+            let items = response.data
+            for (let i = 0; i < items.length; i++) {
+              $scope.questionsList.push(items[i])
+            }
+            $scope.questionsOffset += 10 //offset is incremented cause we successfully loaded some questions
+        })
+        .catch(error => {
+            console.error(error)
+            //TODO: handle error
+        })
+        .finally(() => {
+            self.loadingMore = false
+        })
+    }
 
     $scope.searchFiltered = () => {
         //called when there's a change in the input text... we need to hit the endpoint to list the questions
@@ -37,11 +72,13 @@ controller('questionsController', function($scope, blissAPIservice) {
         //let's not allow search to go through unless we have at least 3 chars to prevent spamming requests
         if($scope.questionFilter.length >= 3) {
             console.log("valid search let's do it!");
+            $scope.questionsOffset = 0 //offset is 0 cause it's a "new" search
             self.requestRunning = true
 
-            blissAPIservice.getQuestions(0, $scope.questionFilter) //offset is 0 cause it's a "new" search
+            blissAPIservice.getQuestions($scope.questionsOffset, $scope.questionFilter) 
             .then(response => {
                 console.log(response.data)
+                $scope.questionsOffset += 10 //offset is incremented cause we successfully loaded some questions
                 $scope.questionsList = response.data;
             })
             .catch(error => {
@@ -54,5 +91,5 @@ controller('questionsController', function($scope, blissAPIservice) {
                 self.requestRunning = false
             })
         }
-    };
-});
+    }
+})

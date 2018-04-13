@@ -43,6 +43,7 @@ angular.module('myApp.services', [])
 
     //endpoint to get the list of questions (no params yet)
     blissAPI.getQuestions = (offset, filter) => {
+        console.log("blissAPI service called getQuestions with params offset: "+offset+" and filter:"+filter)
       return $http({
         method: 'GET', 
         url: '/questions',
