@@ -1,18 +1,41 @@
 angular.module('myApp.controllers', [])
-.controller('loadingScreenController', function(blissAPIservice, $location) {
-    //test call to the service see if it's working
-    blissAPIservice.checkHealth()
-    .then(response => {
-        console.log("Hooray a response!")
-        console.log(response)
-        if(response.data.status === "OK") {
-            console.log("going to redirect to questions in 2 seconds")
-            $location.path("/questions")
-        }
-    })
-    .catch(error => {
-        console.log("Oh noes! An error!" + error)
-    })
+.controller('loadingScreenController', function($scope, blissAPIservice, $location) {
+    //function that will call the API service and check if the server is okay or not
+    /**
+     * Existential doubt... Couldn't we somehow use an interceptor for each request... like a middleware, to make sure that before
+     * any request goes through to the API, it always calls the endpoint checkHealth and handles it accordingly?
+     * I think that would potentially be a more elegant solution rather than this but time is lacking so
+     * for now we do it this way
+     */
+    checkServer = () => {
+        $scope.serverError = false
+        //test call to the service see if it's working
+        blissAPIservice.checkHealth()
+        .then(response => {
+            console.log("Hooray a response!")
+            console.log(response)
+            $scope.serverError = false
+
+            if(response.status === 200) { // success server is online lets go to the questions list
+                console.log("going to redirect to questions in 2 seconds")
+                $location.path("/questions")
+            } 
+            else { // technically should return 503 if service is unavailable but this is a catchall, if its not a 200 (success) then we'll show the try again widget
+                $scope.serverError = true
+            }
+        })
+        .catch(error => {
+            $scope.serverError = true
+            console.log("Oh noes! An error!" + error)
+        })
+    }
+
+    $scope.tryAgain = () => {
+        console.log("clicked try again")
+        checkServer()
+    }
+
+    checkServer()
 })
 .controller('questionsController', function($scope, blissAPIservice, $location) {
     console.log("loaded questions controller, params? ")

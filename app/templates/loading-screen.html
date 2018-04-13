@@ -1,3 +1,8 @@
-<div>
+<div ng-controller="loadingScreenController">
     <p>Please wait while we check if the server is online!</p>
+    <div ng-show="serverError" class="try-again-container">
+        <p>Oops! It looks like we are having some trouble connecting to the server.. Please try again later!</p>
+        
+        <button class="btn btn-primary" ng-click="tryAgain()">Try again</button>
+    </div>
 </div>
