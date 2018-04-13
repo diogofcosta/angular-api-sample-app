@@ -13,6 +13,23 @@ angular.module('myApp', [
   .otherwise({redirectTo: '/'})
 }])
 
+.run(($window ,$rootScope) => {
+  //based on https://stackoverflow.com/a/16242703
+  //we use this to capture the offline/online event and handle it on angular
+  $rootScope.online = navigator.onLine;
+      $window.addEventListener("offline", function() {
+        $rootScope.$apply(function() {
+          $rootScope.online = false;
+        });
+      }, false);
+
+      $window.addEventListener("online", function() {
+        $rootScope.$apply(function() {
+          $rootScope.online = true;
+        });
+      }, false);
+})
+
 // you might call this after your module initalization
 /**
  * Scroll events can be triggered very frequently, which can hurt performance and make 
