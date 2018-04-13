@@ -41,7 +41,7 @@ angular.module('myApp.services', [])
         })
     }
 
-    //endpoint to get the list of questions (no params yet)
+    //endpoint to get the list of questions
     blissAPI.getQuestions = (offset, filter) => {
         console.log("blissAPI service called getQuestions with params offset: "+offset+" and filter:"+filter)
       return $http({
@@ -53,6 +53,29 @@ angular.module('myApp.services', [])
             filter: filter //assuming filter is working on the API then we get results filtered by this
         } 
       })
+    }
+
+    //endpoint to get a detailed question
+    blissAPI.getQuestionByID = (id) => {
+        console.log("blissAPI service called getQuestionByID with params id: "+id)
+      return $http({
+        method: 'GET', 
+        url: '/questions/'+id
+      })
+    }
+
+    //endpoint to update a question
+    blissAPI.updateQuestion = (id, questionBody) => {
+        console.log("blissAPI service called updateQuestion with params id: "+id+" and question body:")
+        console.log(questionBody)
+        return $http({
+            method: 'PUT', 
+            url: '/questions/'+id,
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            data: questionBody
+        })
     }
 
     return blissAPI;

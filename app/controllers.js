@@ -18,7 +18,7 @@ angular.module('myApp.controllers', [])
 
             if(response.status === 200) { // success server is online lets go to the questions list
                 console.log("going to redirect to questions in 2 seconds")
-                $location.path("/questions")
+                $location.path("questions")
             } 
             else { // technically should return 503 if service is unavailable but this is a catchall, if its not a 200 (success) then we'll show the try again widget
                 $scope.serverError = true
@@ -42,6 +42,14 @@ angular.module('myApp.controllers', [])
     //let's get the url params if there's any (only interested in the question_filter param)
     let searchObject = $location.search()
     console.log(searchObject)
+
+
+    if(searchObject.question_id) { // if we called the endpoint on the format "http://HOST:PORT/questions?question_id=QUESTION_ID" then let's redirect it to our internal template that handles detailed questions
+        console.log("redirecting to details of question ", searchObject.question_id)
+        //clear the query params first before changing the route
+        $location.$$search = {}
+        $location.path("questions/"+searchObject.question_id)
+    }
 
 
     //this variable will "track" the number of questions that we got from the endpoint 
@@ -76,6 +84,12 @@ angular.module('myApp.controllers', [])
         .finally(() => {
             self.loadingMore = false
         })
+    }
+
+    //function called when clicking on a row of the list of questions
+    $scope.goToQuestion = (id) => {
+        console.log("going to view details of question with id "+id)
+        $location.path("questions/"+id)
     }
 
     $scope.searchFiltered = () => {
@@ -114,5 +128,60 @@ angular.module('myApp.controllers', [])
                 self.requestRunning = false
             })
         }
+    }
+})
+.controller('detailedQuestionController', function($scope, blissAPIservice, $location) {
+    console.log("loaded detailed question controller, params? ")
+    //let's get the url params if there's any (only interested in the question_filter param)
+    let searchObject = $location.search()
+    console.log(searchObject)
+
+    //called when are "infinite scrolling" to make sure we keep loading more and more events and add it to the list
+    blissAPIservice.getQuestionByID(searchObject.question_id)
+    .then(response => {
+        console.log(response.data)
+        $scope.currentQuestion = response.data
+    })
+    .catch(error => {
+        console.error(error)
+        //TODO: handle error
+    })
+
+    $scope.submitVote = (choiceIndex) => {
+        console.log("need to vote on choice "+choiceIndex+" which is "+$scope.currentQuestion.choices[choiceIndex].choice)
+        /**
+         * create a copy to update and then send to the API, if we updated the currentQuestion 
+         * on the scope it would update automatically on the model and it if the api returns an error
+         * it would be out of "sync" between the model and the actual question state
+        */
+        let newQuestionBody = angular.copy($scope.currentQuestion)
+        console.log("before update:")
+        console.log(newQuestionBody)
+
+        newQuestionBody.choices[choiceIndex].votes++
+        console.log("after update:")
+        console.log(newQuestionBody)
+        
+        //lets call the update question endpoint and if there's success we'll update the model
+        blissAPIservice.updateQuestion($scope.currentQuestion.id, newQuestionBody) 
+        .then(response => {
+            console.log(response)
+            $scope.currentQuestion = response.data
+            //WARNING: since the API is not implemented only mocked this endpoint returns
+            //invalid data, for example if we vote on a choice and call teh update endpoint
+            //it should return the data with the vote incremented but it's returning 
+            //with the vote we did at 1 and the rest at 0
+        })
+        .catch(error => {
+            console.error(error)
+            //TODO: handle error
+        })
+    }
+
+    //called when we need to go back to the questions list
+    $scope.goToQuestionList = () => {
+        //clear the query params first before changing the route
+        $location.$$search = {}
+        $location.path("questions")
     }
 })

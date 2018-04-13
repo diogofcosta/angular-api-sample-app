@@ -8,10 +8,10 @@ angular.module('myApp', [
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider
   .when("/", {templateUrl: "templates/loading-screen.html", controller: "loadingScreenController"})
-  .when("/questions", {templateUrl: "templates/list-questions.html" ,controller: "questionsController"})
-  .when("/questions/:id", {templateUrl: "templates/question-detail.html" ,controller: "detailedQuestionController"})
-  .otherwise({redirectTo: '/'});
-}]);
+  .when("/questions:question_id?", {templateUrl: "templates/list-questions.html" ,controller: "questionsController"})
+  .when("/questions/:question_id", {templateUrl: "templates/detailed-question.html" ,controller: "detailedQuestionController"})
+  .otherwise({redirectTo: '/'})
+}])
 
 // you might call this after your module initalization
 /**
